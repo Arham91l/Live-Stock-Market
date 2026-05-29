@@ -237,6 +237,24 @@ CURRENCY = {t: "₹" if t.endswith(".NS") else "$" for t in YF_TICKERS}
 # ─────────────────────────────────────────────────────────────
 @st.cache_data(ttl=3600, show_spinner=False)
 def load_and_update_data():
+
+    # ── COLD START: models folder missing on Streamlit Cloud ──
+    os.makedirs(ARIMA_DIR, exist_ok=True)
+    os.makedirs(GARCH_DIR, exist_ok=True)
+    os.makedirs(DATA_DIR,  exist_ok=True)
+
+    if not os.path.exists(os.path.join(DATA_DIR, "tickers.pkl")):
+        raw = yf.download(YF_TICKERS, start="2019-01-01", progress=False)["Close"]
+        raw.dropna(how="all", inplace=True)
+        raw.to_csv(os.path.join(DATA_DIR, "close_prices.csv"))
+
+        last_date = str(raw.index[-1].date())
+        pickle.dump(list(raw.columns),        open(os.path.join(DATA_DIR, "tickers.pkl"),     "wb"))
+        pickle.dump(last_date,                open(os.path.join(DATA_DIR, "last_date.pkl"),   "wb"))
+        pickle.dump(raw.iloc[-1].to_dict(),   open(os.path.join(DATA_DIR, "last_prices.pkl"), "wb"))
+        return raw, True, last_date
+    # ──────────────────────────────────────────────────────────
+
     tickers      = pickle.load(open(os.path.join(DATA_DIR, "tickers.pkl"),   "rb"))
     last_date    = pickle.load(open(os.path.join(DATA_DIR, "last_date.pkl"), "rb"))
     close_prices = pd.read_csv(
@@ -256,6 +274,7 @@ def load_and_update_data():
             return updated, True, new_last
     except Exception as e:
         st.warning(f"Live fetch failed: {e}")
+
     last_date = pickle.load(open(os.path.join(DATA_DIR, "last_date.pkl"), "rb"))
     return close_prices, False, last_date
 

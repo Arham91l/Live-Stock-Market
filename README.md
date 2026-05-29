@@ -267,7 +267,10 @@ This better simulates real-world forecasting.
 * Portfolio Optimization Module
 
 ---
+## Link
+https://live-stock-market-hga7upepz9jgaebpggcq5x.streamlit.app/
 
+---
 ## Author
 
 **Shaikh Arham Ahmed**

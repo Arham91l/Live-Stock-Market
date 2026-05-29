@@ -14,6 +14,15 @@ import os
 import time
 
 warnings.filterwarnings("ignore")
+# Add this right after all imports
+import os
+
+# Absolute base path — works on local AND Streamlit Cloud
+BASE_DIR   = os.path.dirname(os.path.abspath(__file__))
+MODELS_DIR = os.path.join(BASE_DIR, "models")
+ARIMA_DIR  = os.path.join(MODELS_DIR, "arima")
+GARCH_DIR  = os.path.join(MODELS_DIR, "garch")
+DATA_DIR   = os.path.join(MODELS_DIR, "data")
 
 # ─────────────────────────────────────────────────────────────
 # PAGE CONFIG
@@ -228,10 +237,10 @@ CURRENCY = {t: "₹" if t.endswith(".NS") else "$" for t in YF_TICKERS}
 # ─────────────────────────────────────────────────────────────
 @st.cache_data(ttl=3600, show_spinner=False)
 def load_and_update_data():
-    tickers   = pickle.load(open("models/data/tickers.pkl",   "rb"))
-    last_date = pickle.load(open("models/data/last_date.pkl", "rb"))
+    tickers      = pickle.load(open(os.path.join(DATA_DIR, "tickers.pkl"),   "rb"))
+    last_date    = pickle.load(open(os.path.join(DATA_DIR, "last_date.pkl"), "rb"))
     close_prices = pd.read_csv(
-        "models/data/close_prices.csv",
+        os.path.join(DATA_DIR, "close_prices.csv"),
         index_col=0, parse_dates=True
     )
     try:
@@ -241,30 +250,30 @@ def load_and_update_data():
             updated = pd.concat([close_prices, new_data])
             updated = updated[~updated.index.duplicated(keep="last")]
             updated.sort_index(inplace=True)
-            updated.to_csv("models/data/close_prices.csv")
+            updated.to_csv(os.path.join(DATA_DIR, "close_prices.csv"))
             new_last = str(updated.index[-1].date())
-            pickle.dump(new_last, open("models/data/last_date.pkl", "wb"))
+            pickle.dump(new_last, open(os.path.join(DATA_DIR, "last_date.pkl"), "wb"))
             return updated, True, new_last
     except Exception as e:
         st.warning(f"Live fetch failed: {e}")
-    last_date = pickle.load(open("models/data/last_date.pkl", "rb"))
+    last_date = pickle.load(open(os.path.join(DATA_DIR, "last_date.pkl"), "rb"))
     return close_prices, False, last_date
 
 
 @st.cache_resource(show_spinner=False)
 def load_models():
-    tickers      = pickle.load(open("models/data/tickers.pkl", "rb"))
+    tickers      = pickle.load(open(os.path.join(DATA_DIR, "tickers.pkl"), "rb"))
     arima_models = {}
     garch_models = {}
     for ticker in tickers:
         try:
-            with open(f"models/arima/{ticker}_arima.pkl", "rb") as f:
+            with open(os.path.join(ARIMA_DIR, f"{ticker}_arima.pkl"), "rb") as f:
                 arima_models[ticker] = pickle.load(f)
         except:
             arima_models[ticker] = None
     for ticker in VOLATILE:
         try:
-            with open(f"models/garch/{ticker}_garch.pkl", "rb") as f:
+            with open(os.path.join(GARCH_DIR, f"{ticker}_garch.pkl"), "rb") as f:
                 garch_models[ticker] = pickle.load(f)
         except:
             garch_models[ticker] = None
@@ -285,7 +294,7 @@ def retrain_all(close_prices):
         try:
             series = close_prices[ticker].dropna()
             fitted = ARIMA(series, order=(1, 1, 1)).fit()
-            with open(f"models/arima/{ticker}_arima.pkl", "wb") as f:
+            with open(os.path.join(ARIMA_DIR, f"{ticker}_arima.pkl"), "wb") as f:
                 pickle.dump(fitted, f)
             arima_models[ticker] = fitted
         except Exception as e:
@@ -299,13 +308,17 @@ def retrain_all(close_prices):
             series  = close_prices[ticker].dropna()
             returns = series.pct_change().dropna() * 100
             fitted  = arch_model(returns, vol="Garch", p=1, q=1, dist="normal").fit(disp="off")
-            with open(f"models/garch/{ticker}_garch.pkl", "wb") as f:
+            with open(os.path.join(GARCH_DIR, f"{ticker}_garch.pkl"), "wb") as f:
                 pickle.dump(fitted, f)
             garch_models[ticker] = fitted
         except Exception as e:
             st.warning(f"GARCH failed for {ticker}: {e}")
         step += 1
         progress.progress(step / total)
+
+    # Update last prices
+    last_prices = close_prices.iloc[-1].to_dict()
+    pickle.dump(last_prices, open(os.path.join(DATA_DIR, "last_prices.pkl"), "wb"))
 
     load_models.clear()
     progress.empty()

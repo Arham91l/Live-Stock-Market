@@ -5,8 +5,8 @@ A production-ready time series forecasting system that fetches live stock market
 ---
 
 ## 🌐 Live Demo
+https://live-stock-market-uzghanxyv5ctrwvlbdfinc.streamlit.app/
 
-🔗 **[stocksense.streamlit.app](https://arham91l-live-stock-market.streamlit.app)**
 
 ---
 
@@ -237,11 +237,6 @@ Standard train-test split gives a single performance snapshot. TimeSeriesSplit a
 
 **Arham** — B.Tech Student  
 📧 [GitHub](https://github.com/Arham91l)
-
----
-
-## Link
-https://live-stock-market-uzghanxyv5ctrwvlbdfinc.streamlit.app/
 
 ---
 

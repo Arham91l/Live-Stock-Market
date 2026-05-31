@@ -240,6 +240,11 @@ Standard train-test split gives a single performance snapshot. TimeSeriesSplit a
 
 ---
 
+## Link
+https://live-stock-market-uzghanxyv5ctrwvlbdfinc.streamlit.app/
+
+---
+
 ## 📄 License
 
 This project is for educational purposes. Stock forecasts are not financial advice.

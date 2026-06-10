@@ -214,14 +214,17 @@ model = xgb.XGBRegressor(
 
 ### Screenshots
 
-> 📸 _Add screenshots of your Streamlit dashboard here_
+![Dashboard Overview](images/s1.png)
+![ARIMA Forecast](images/s2.png)
+![GARCH Volatility](images/s3.png)
+![XGBoost Prediction](images/s4.png)
+![XGBoost Prediction](images/s5.png)
+![XGBoost Prediction](images/s6.png)
+![XGBoost Prediction](images/s7.png)
+![XGBoost Prediction](images/s8.png)
+![XGBoost Prediction](images/s9.png)
+![XGBoost Prediction](images/s10.png)
 
-```
-![Dashboard Overview](docs/screenshots/dashboard_main.png)
-![ARIMA Forecast](docs/screenshots/arima_forecast.png)
-![GARCH Volatility](docs/screenshots/garch_volatility.png)
-![XGBoost Prediction](docs/screenshots/xgboost_forecast.png)
-```
 
 ---
 

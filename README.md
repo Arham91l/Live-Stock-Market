@@ -283,48 +283,13 @@ streamlit run app.py
 
 ## 🚀 Live Demo
 
-> 🔗 **[Streamlit Cloud Deployment — Click Here](https://YOUR_APP_URL.streamlit.app)**
+> 🔗 https://live-stock-market-uzghanxyv5ctrwvlbdfinc.streamlit.app/
 
 > ⚠️ **Note:** The live app fetches real market data on load. yfinance may occasionally throttle requests — a refresh typically resolves this.
 
 ---
 
-## 📁 Repository Structure
 
-```
-stock-market-forecasting/
-│
-├── app.py                          # Main Streamlit application
-├── requirements.txt
-├── README.md
-│
-├── src/
-│   ├── data_fetcher.py             # yfinance wrapper with retry/cache logic
-│   ├── preprocessor.py             # Log returns, differencing, stationarity tests
-│   ├── arima_model.py              # Auto-ARIMA fitting and forecasting
-│   ├── garch_model.py              # GARCH(1,1) fitting and volatility forecast
-│   ├── xgboost_model.py            # XGBoost feature engineering + training
-│   ├── evaluator.py                # MAE, RMSE, MAPE, directional accuracy
-│   └── visualizer.py               # Plotly chart builders
-│
-├── notebooks/
-│   ├── 01_EDA_StockData.ipynb
-│   ├── 02_Stationarity_Analysis.ipynb
-│   ├── 03_ARIMA_Modeling.ipynb
-│   ├── 04_GARCH_Volatility.ipynb
-│   └── 05_XGBoost_Forecasting.ipynb
-│
-├── data/
-│   └── cache/                      # Cached yfinance data (gitignored for large files)
-│
-├── docs/
-│   └── screenshots/
-│
-└── .streamlit/
-    └── config.toml
-```
-
----
 
 ## 🛠️ Tech Stack
 
@@ -360,17 +325,7 @@ This project is for **educational and research purposes only**. Nothing in this 
 ## 👤 Author
 
 **Arham**
-- 📧 [your.email@example.com]
-- 💼 [LinkedIn Profile]
-- 🐙 [GitHub Profile]
 
----
-
-## 📜 License
-
-This project is licensed under the MIT License — see the [LICENSE](LICENSE) file for details.
-
----
 
 <div align="center">
 ⭐ Star this repo if you found it useful!
